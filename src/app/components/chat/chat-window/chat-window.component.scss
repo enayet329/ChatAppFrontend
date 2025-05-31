@@ -1,0 +1,53 @@
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.message {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  max-width: 70%;
+}
+
+.sent {
+  background-color: #DCF8C6;
+  margin-left: auto;
+}
+
+.received {
+  background-color: #ECECEC;
+}
+
+.timestamp {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.message-form {
+  display: flex;
+  padding: 1rem;
+}
+
+mat-form-field {
+  flex: 1;
+}
+
+img, video {
+  max-width: 100%;
+}
+
+.presence {
+  margin-left: 0.5rem;
+}
+
+.presence.online {
+  color: green;
+}

@@ -1,0 +1,13 @@
+<mat-card *ngIf="user" class="profile-card">
+  <mat-card-header>
+    <mat-card-title>{{ user.username }}</mat-card-title>
+    <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>Status: {{ user.isOnline ? 'Online' : 'Offline' }}</p>
+    <img *ngIf="user.profilePictureUrl" [src]="user.profilePictureUrl" alt="Profile Picture" class="profile-pic">
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="warn" (click)="logout()">Logout</button>
+  </mat-card-actions>
+</mat-card>

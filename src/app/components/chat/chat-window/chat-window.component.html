@@ -1,0 +1,25 @@
+<div *ngIf="chat" class="chat-container">
+  <mat-toolbar>
+    <span>{{ chat.groupName || getChatName(chat) }}</span>
+    <span class="presence" [ngClass]="{'online': isOnline(chat)}">●</span>
+  </mat-toolbar>
+  <div class="messages">
+    <div *ngFor="let message of messages" class="message" [ngClass]="{'sent': message.senderId === currentUser?.id}">
+      <div *ngIf="message.content">{{ message.content }}</div>
+      <div *ngIf="message.mediaId">
+        <img *ngIf="isImage(message.mediaId)" [src]="getMediaUrl(message.mediaId)" alt="Media" />
+        <video *ngIf="isVideo(message.mediaId)" [src]="getMediaUrl(message.mediaId)" controls></video>
+      </div>
+      <span class="timestamp">{{ message.timestamp | date:'short' }}</span>
+    </div>
+  </div>
+  <form (ngSubmit)="sendMessage()" class="message-form">
+    <mat-form-field appearance="fill">
+      <input matInput [(ngModel)]="newMessage" name="message" placeholder="Type a message...">
+    </mat-form-field>
+    <input type="file" (change)="onFileSelected($event)" accept="image/*,video/*">
+    <button mat-icon-button type="submit" [disabled]="!newMessage && !selectedFile">
+      <mat-icon>send</mat-icon>
+    </button>
+  </form>
+</div>
