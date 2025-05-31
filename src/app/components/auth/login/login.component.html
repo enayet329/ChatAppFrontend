@@ -1,0 +1,19 @@
+<mat-card class="auth-card">
+  <mat-card-header>
+    <mat-card-title>Login</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput [(ngModel)]="email" name="email" required email>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput [(ngModel)]="password" name="password" type="password" required>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="!email || !password">Login</button>
+    </form>
+    <p>Not registered? <a routerLink="/register">Sign up</a></p>
+  </mat-card-content>
+</mat-card>
