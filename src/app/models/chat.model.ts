@@ -3,7 +3,7 @@ export interface Chat {
   participants: string[];
   isGroupChat: boolean;
   groupName?: string;
-  lastMessageId?: string;
+  lastMessageId?: string; // ✨ New field
   createdAt: string;
   updatedAt: string;
 }

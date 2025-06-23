@@ -1,9 +1,9 @@
-<mat-list>
-  <mat-list-item *ngFor="let chat of chats" (click)="selectChat(chat)">
-    <span matListItemTitle>{{ chat.groupName || getChatName(chat) }}</span>
-    <span matListItemLine>{{ chat.lastMessageId ? 'Last message...' : 'No messages yet' }}</span>
-  </mat-list-item>
-</mat-list>
-<button mat-fab color="primary" class="fab" (click)="openCreateChatDialog()">
-  <mat-icon>add</mat-icon>
-</button>
+<h2>Your Chats</h2>
+<button mat-button (click)="openCreateChatDialog()">Create New Chat</button>
+<ul>
+  <li *ngFor="let chat of chats">
+    {{ chat.isGroupChat ? chat.groupName : 'Chat with ' + getChatName(chat) }}
+    <button mat-button [routerLink]="['/chat', chat.id]">Open Chat</button>
+  </li>
+</ul>
+<button mat-button (click)="refreshChats()">Refresh Chats</button>

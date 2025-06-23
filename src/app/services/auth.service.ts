@@ -8,6 +8,7 @@ import { User } from '../models/user.model';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
+  private usersApiUrl = `${environment.apiUrl}/Chats/user`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
@@ -19,6 +20,10 @@ export class AuthService {
         error: err => console.error('Initial profile fetch failed:', err.message, err.status)
       });
     }
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
   get currentUser(): User | null {
@@ -61,7 +66,7 @@ export class AuthService {
       catchError(err => {
         console.error('Get profile error:', err.message, err.status);
         if (err.status === 401) {
-          this.logout(); // Clear state on 401
+          this.logout();
         }
         return throwError(() => new Error('Failed to fetch profile'));
       })
@@ -77,5 +82,15 @@ export class AuthService {
   isAuthenticated(): boolean {
     const token = localStorage.getItem('token');
     return !!token;
+  }
+
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.usersApiUrl).pipe(
+      tap(users => console.log('Fetched users:', users)),
+      catchError(err => {
+        console.error('Get users error:', err.message, err.status);
+        return throwError(() => new Error('Failed to fetch users'));
+      })
+    );
   }
 }

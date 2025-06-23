@@ -1,25 +1,44 @@
-<div *ngIf="chat" class="chat-container">
-  <mat-toolbar>
-    <span>{{ chat.groupName || getChatName(chat) }}</span>
-    <span class="presence" [ngClass]="{'online': isOnline(chat)}">●</span>
+<div *ngIf="isLoading" class="loading-container">
+  <mat-spinner diameter="40" color="primary"></mat-spinner>
+</div>
+<div *ngIf="!isLoading && chat; else noChat" class="chat-container">
+  <mat-toolbar class="chat-header">
+    <button mat-icon-button [routerLink]="['/chats']" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="chat-title">{{ chat.groupName || getChatName(chat) }}</span>
+    <span class="presence" [ngClass]="{'online': isOnline(chat), 'offline': !isOnline(chat)}">●</span>
   </mat-toolbar>
   <div class="messages">
-    <div *ngFor="let message of messages" class="message" [ngClass]="{'sent': message.senderId === currentUser?.id}">
-      <div *ngIf="message.content">{{ message.content }}</div>
-      <div *ngIf="message.mediaId">
-        <img *ngIf="isImage(message.mediaId)" [src]="getMediaUrl(message.mediaId)" alt="Media" />
-        <video *ngIf="isVideo(message.mediaId)" [src]="getMediaUrl(message.mediaId)" controls></video>
+    <div *ngFor="let message of messages; trackBy: trackByMessageId" class="message" [ngClass]="{'sent': message.senderId === currentUser?.id, 'received': message.senderId !== currentUser?.id}">
+      <div class="message-content" *ngIf="message.content">{{ message.content }}</div>
+      <div class="message-media" *ngIf="message.mediaId">
+        <img *ngIf="isImage(message.mediaId)" [src]="getMediaUrl(message.mediaId)" alt="Media" class="media-image" />
+        <video *ngIf="isVideo(message.mediaId)" [src]="getMediaUrl(message.mediaId)" controls class="media-video"></video>
       </div>
       <span class="timestamp">{{ message.timestamp | date:'short' }}</span>
     </div>
   </div>
   <form (ngSubmit)="sendMessage()" class="message-form">
-    <mat-form-field appearance="fill">
-      <input matInput [(ngModel)]="newMessage" name="message" placeholder="Type a message...">
+    <mat-form-field appearance="outline" class="message-input">
+      <input matInput [(ngModel)]="newMessage" name="message" placeholder="Type a message..." [disabled]="isSending" autocomplete="off">
     </mat-form-field>
-    <input type="file" (change)="onFileSelected($event)" accept="image/*,video/*">
-    <button mat-icon-button type="submit" [disabled]="!newMessage && !selectedFile">
-      <mat-icon>send</mat-icon>
+    <div class="file-input">
+      <button mat-icon-button class="file-upload-button" [disabled]="isSending">
+        <mat-icon>attach_file</mat-icon>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*,video/*" [disabled]="isSending" class="file-input-hidden">
+      </button>
+      <span *ngIf="selectedFile" class="file-name">{{ selectedFile.name }}</span>
+    </div>
+    <button mat-fab color="primary" type="submit" [disabled]="(!newMessage.trim() && !selectedFile) || isSending" class="send-button">
+      <mat-icon *ngIf="!isSending">send</mat-icon>
+      <mat-icon *ngIf="isSending">refresh</mat-icon>
     </button>
   </form>
 </div>
+<ng-template #noChat>
+  <div class="no-chat-container">
+    <p class="no-chat-message">Chat not found or failed to load.</p>
+    <button mat-raised-button color="primary" [routerLink]="['/chats']">Back to Chats</button>
+  </div>
+</ng-template>

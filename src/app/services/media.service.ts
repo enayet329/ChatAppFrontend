@@ -12,7 +12,11 @@ export class MediaService {
 
   uploadMedia(file: File): Observable<Media> {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', file, file.name);
     return this.http.post<Media>(`${this.apiUrl}/upload`, formData);
+  }
+
+  getMedia(mediaId: string): Observable<Media> {
+    return this.http.get<Media>(`${this.apiUrl}/${mediaId}`);
   }
 }
